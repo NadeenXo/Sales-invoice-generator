@@ -2,19 +2,10 @@ package salesgenerator;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import Model.*;
+import java.awt.TextField;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 /**
  *
@@ -25,13 +16,16 @@ public class MyFrame extends javax.swing.JFrame implements ActionListener {
     //put your 2 files path
     String path1 = "../InvoiceHeader.csv";
     String path2 = "../InvoiceLine.csv";
-    InvoiceLine invoiceLine;
-    DefaultTableModel model;
+    //InvoiceLine invoiceLine;
+    //DefaultTableModel model;
+    Listeners listener;
 
     /**
      * Creates new form MyFrame
      */
     public MyFrame() {
+        listener = new Listeners(this);
+
         initComponents();
 
     }
@@ -155,7 +149,7 @@ public class MyFrame extends javax.swing.JFrame implements ActionListener {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteBtn)
                     .addComponent(createBtn))
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         saveBtn.setText("Save");
@@ -314,305 +308,48 @@ public class MyFrame extends javax.swing.JFrame implements ActionListener {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void loadFileTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFileTabActionPerformed
-
-        // if you want to choose the 2 files
-        //two path fields will be changed as you selected
-        BufferedReader br = null;
-        JFileChooser fc = new JFileChooser();
-        int result = fc.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            path1 = fc.getSelectedFile().getPath();
-
-            try {
-                br = new BufferedReader(new FileReader(new File(path1)));
-                model = (DefaultTableModel) invoicesTable.getModel();
-                Object[] tableLines = br.lines().toArray();
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        //invoice line
-        BufferedReader br2 = null;
-        JFileChooser fc2 = new JFileChooser();
-        int result2 = fc2.showOpenDialog(this);
-        if (result2 == JFileChooser.APPROVE_OPTION) {
-            path2 = fc2.getSelectedFile().getPath();
-
-            try {
-                br2 = new BufferedReader(new FileReader(new File(path2)));
-                model = (DefaultTableModel) invoiceItemsTable.getModel();
-                Object[] tableLines = br2.lines().toArray();
-                //String s= model.getColumnName(4);
-                int[] n = new int[tableLines.length];//  n=itemCount*itemPrice
-                int num;
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
-                    n[i] = Integer.parseInt(model.getValueAt(i, 2).toString()) * Integer.parseInt(model.getValueAt(i, 3).toString());
-
-                    //System.out.println(n[i]);
-                    num = n[i];
-                    model.setValueAt(String.valueOf(num), i, 4);
-                }
-
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br2.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-
-
-        /*
-        //if you know where your files located
-        //it will use the 2 paths fields
-        BufferedReader br = null;
-        try {
-            File file = new File(path1);
-            br = new BufferedReader(new FileReader(file));
-            model = (DefaultTableModel) invoicesTable.getModel();
-                Object[] tableLines = br.lines().toArray();
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-        
-        BufferedReader br2 = null;
-        try {
-            File file2 = new File(path2);
-            br2 = new BufferedReader(new FileReader(file2));
-            model2 = (DefaultTableModel) invoiceItemsTable.getModel();
-                Object[] tableLines = br2.lines().toArray();
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model2.addRow(dataRow);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br2.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-
-         */
+        listener.loadFileTabActionPerformed(evt);
 
     }//GEN-LAST:event_loadFileTabActionPerformed
-    int NoNum;
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
-        // create new invoice row as you typed in invoice data
-        model = (DefaultTableModel) invoicesTable.getModel();
-        model.addRow(new Object[]{
-            numTextField.getText(),
-            dateTextField.getText(),
-            nameTextField.getText(),
-            totalTextField.getText()
-        });
-        NoNum = model.getRowCount();
-        NoNum++; //to increase invoice number
-        numTextField.setText(String.valueOf(NoNum));
+        listener.createBtnActionPerformed(evt);
     }//GEN-LAST:event_createBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        // save invoice items table in the specified csv file
-        if (invoiceItemsTable.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Empty Table, please load a txt file");
-        } else {
-
-            BufferedWriter bw2 = null;
-            File file2 = null;
-            try {
-                file2 = new File(path2);
-                bw2 = new BufferedWriter(new FileWriter(file2.getAbsoluteFile()));
-                for (int i = 0; i < invoiceItemsTable.getRowCount(); i++) {
-                    for (int j = 0; j < invoiceItemsTable.getColumnCount(); j++) {
-                        String s = (String) invoiceItemsTable.getModel().getValueAt(i, j);
-                        if (s == null) {
-                            bw2.write(" ");
-                        } else {
-                            bw2.write(s + ",");
-                        }
-                    }
-
-                    bw2.write("\n");
-                }
-                JOptionPane.showMessageDialog(null, "Saved successfully");
-
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                bw2.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
+        listener.saveBtnActionPerformed(evt);
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void saveFileTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileTabActionPerformed
-        // save 2 csv files
-
-        BufferedWriter bw = null;
-        try {
-            File file = new File(path1);
-            bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
-            for (int i = 0; i < invoicesTable.getRowCount(); i++) {
-                for (int j = 0; j < invoicesTable.getColumnCount(); j++) {
-                    String s = (String) invoicesTable.getModel().getValueAt(i, j);
-                    if (s == null) {
-                        bw.write(" ");
-                    } else {
-                        bw.write(s + ",");
-                    }
-                }
-                bw.write("\n");
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                bw.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-
-        BufferedWriter bw2 = null;
-        try {
-            File file2 = new File(path2);
-            bw2 = new BufferedWriter(new FileWriter(file2.getAbsoluteFile()));
-            for (int i = 0; i < invoiceItemsTable.getRowCount(); i++) {
-                for (int j = 0; j < invoiceItemsTable.getColumnCount(); j++) {
-                    String s = (String) invoiceItemsTable.getModel().getValueAt(i, j);
-                    if (s == null) {
-                        bw2.write(" ");
-                    } else {
-                        bw2.write(s + ",");
-                    }
-                }
-                bw2.write("\n");
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                bw2.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
+        listener.saveFileTabActionPerformed(evt);
 
     }//GEN-LAST:event_saveFileTabActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        model = (DefaultTableModel) invoicesTable.getModel();
-        if (invoicesTable.getSelectedRowCount() == 1) { //if you already select a row
-            model.removeRow(invoicesTable.getSelectedRow());            // remove selected row from the model
-            JOptionPane.showMessageDialog(null, "Selected row deleted successfully");
-        } else {
-            if (invoicesTable.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Empty Table, please load a txt file");
-            } else {
-                JOptionPane.showMessageDialog(null, "Select a row to delete");
-
-            }
-        }
+        listener.deleteBtnActionPerformed(evt);
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
-        // undo changes , read the file again
-        model = (DefaultTableModel) invoiceItemsTable.getModel();
-
-        if (invoiceItemsTable.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Empty Table, please load a txt file");
-        } else {
-            model.setNumRows(0);
-            BufferedReader br2 = null;
-            try {
-                File file2 = new File(path2);
-                br2 = new BufferedReader(new FileReader(file2));
-                Object[] tableLines = br2.lines().toArray();
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br2.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-
+        listener.cancelBtnActionPerformed(evt);
 
     }//GEN-LAST:event_cancelBtnActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        MyFrame frame = new MyFrame();
-        frame.setTitle("sales generator");
-        frame.setVisible(true);
-    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -621,7 +358,7 @@ public class MyFrame extends javax.swing.JFrame implements ActionListener {
     private java.awt.TextField dateTextField;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JTable invoiceItemsTable;
-    private static javax.swing.JTable invoicesTable;
+    private javax.swing.JTable invoicesTable;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
@@ -641,6 +378,30 @@ public class MyFrame extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JMenuItem saveFileTab;
     private javax.swing.JTextField totalTextField;
     // End of variables declaration//GEN-END:variables
+
+    public JTable getInvoiceItemsTable() {
+        return invoiceItemsTable;
+    }
+
+    public JTable getInvoicesTable() {
+        return invoicesTable;
+    }
+
+    public TextField getDateTextField() {
+        return dateTextField;
+    }
+
+    public TextField getNameTextField() {
+        return nameTextField;
+    }
+
+    public JTextField getNumTextField() {
+        return numTextField;
+    }
+
+    public JTextField getTotalTextField() {
+        return totalTextField;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
