@@ -1,17 +1,22 @@
 package salesgenerator;
 
+import Model.InvoiceHeader;
+import Model.InvoiceLine;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import java.awt.TextField;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author nadeen
  */
-public class MyFrame extends javax.swing.JFrame implements ActionListener {
+public class MyFrame extends javax.swing.JFrame implements ActionListener{
 
     //put your 2 files path
     String path1 = "../InvoiceHeader.csv";
@@ -405,27 +410,6 @@ public class MyFrame extends javax.swing.JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-
-            case "LoadFile":
-
-                break;
-            case "SaveFile":
-
-                break;
-            case "CreateNewInvoice":
-
-                break;
-            case "DeleteInvoice":
-
-                break;
-            case "Cancel":
-
-                break;
-            case "Save":
-
-                break;
-        }
     }
-
+    
 }

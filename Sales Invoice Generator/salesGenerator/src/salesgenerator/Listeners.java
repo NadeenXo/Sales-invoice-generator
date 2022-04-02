@@ -29,10 +29,9 @@ public class Listeners {
     String path1 = "../InvoiceHeader.csv";
     String path2 = "../InvoiceLine.csv";
     static int NoNum;
-    DefaultTableModel model;
-//    DefaultTableModel IHmodel = (DefaultTableModel) frame.getInvoicesTable().getModel();
-//    DefaultTableModel ILmodel = (DefaultTableModel) frame.getInvoiceItemsTable().getModel();
-//    
+    //DefaultTableModel model;
+    DefaultTableModel hraderModel;
+    DefaultTableModel lineModel;
 
     public Listeners(MyFrame frame) {
         this.frame = frame;
@@ -43,6 +42,10 @@ public class Listeners {
         // if you want to choose the 2 files
         //two path fields will be changed as you selected
         BufferedReader br = null;
+        BufferedReader br2 = null;
+        int total = 0;
+        int invNum = 1;
+        hraderModel = (DefaultTableModel) frame.getInvoicesTable().getModel();
         JFileChooser fc = new JFileChooser();
         int result = fc.showOpenDialog(frame);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -50,122 +53,80 @@ public class Listeners {
 
             try {
                 br = new BufferedReader(new FileReader(new File(path1)));
-                model = (DefaultTableModel) frame.getInvoicesTable().getModel();
+                //model = (DefaultTableModel) frame.getInvoicesTable().getModel();
                 Object[] tableLines = br.lines().toArray();
                 for (int i = 0; i < tableLines.length; i++) {
                     String line = tableLines[i].toString().trim();
                     String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
+                    hraderModel.addRow(dataRow);
                 }
-            } catch (IOException ex) {
+                //add invoice lines
+                JFileChooser fc2 = new JFileChooser();
+                int result2 = fc2.showOpenDialog(frame);
+                if (result2 == JFileChooser.APPROVE_OPTION) {
+                    path2 = fc2.getSelectedFile().getPath();
+
+                    br2 = new BufferedReader(new FileReader(new File(path2)));
+                    lineModel = (DefaultTableModel) frame.getInvoiceItemsTable().getModel();
+                    Object[] tableLines2 = br2.lines().toArray();
+                    //String s= model.getColumnName(4);
+                    int[] n = new int[tableLines2.length];//  n=itemCount*itemPrice
+                    int num;
+                    int j = 0;
+                    for (int i = 0; i < tableLines2.length; i++) {
+                        String line = tableLines2[i].toString().trim();
+                        String[] dataRow = line.split(",");
+                        lineModel.addRow(dataRow);
+                        n[i] = Integer.parseInt(lineModel.getValueAt(i, 2).toString()) * Integer.parseInt(lineModel.getValueAt(i, 3).toString());
+
+                        //System.out.println(n[i]);
+                        String invNumStr = dataRow[0];
+                        num = n[i];
+                        
+                        //add Tolal to header
+                        if (Integer.parseInt(invNumStr) == invNum) {
+                            total += num;
+                            //System.out.println(ttt);
+                        } else {
+                            hraderModel.setValueAt(String.valueOf(total), j, 3);
+                            invNum++;
+                            j++;
+                            total = 0;
+                            total += num;
+                            //System.out.println(ttt);
+                        }
+                        //end of adding Tolal to header
+
+                        lineModel.setValueAt(String.valueOf(num), i, 4);
+                    }
+                    hraderModel.setValueAt(String.valueOf(total), j, 3);//last total inv
+                    //
+                    NoNum = lineModel.getRowCount();
+                    //
+                }
+            } catch (Exception ex) {
                 Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
                     br.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        //invoice line
-        BufferedReader br2 = null;
-        JFileChooser fc2 = new JFileChooser();
-        int result2 = fc2.showOpenDialog(frame);
-        if (result2 == JFileChooser.APPROVE_OPTION) {
-            path2 = fc2.getSelectedFile().getPath();
-
-            try {
-                br2 = new BufferedReader(new FileReader(new File(path2)));
-                model = (DefaultTableModel) frame.getInvoiceItemsTable().getModel();
-                Object[] tableLines = br2.lines().toArray();
-                //String s= model.getColumnName(4);
-                int[] n = new int[tableLines.length];//  n=itemCount*itemPrice
-                int num;
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
-                    n[i] = Integer.parseInt(model.getValueAt(i, 2).toString()) * Integer.parseInt(model.getValueAt(i, 3).toString());
-
-                    //System.out.println(n[i]);
-                    num = n[i];
-                    model.setValueAt(String.valueOf(num), i, 4);
-                }
-                //
-                 NoNum = model.getRowCount();
-                 //
-                 
-                 
-                 
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
                     br2.close();
                 } catch (IOException ex) {
                     Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-
-        /*
-        //if you know where your files located
-        //it will use the 2 paths fields
-        BufferedReader br = null;
-        try {
-            File file = new File(path1);
-            br = new BufferedReader(new FileReader(file));
-            model = (DefaultTableModel) frame.getInvoicesTable().getModel();
-                Object[] tableLines = br.lines().toArray();
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-        
-        BufferedReader br2 = null;
-        try {
-            File file2 = new File(path2);
-            br2 = new BufferedReader(new FileReader(file2));
-            model2 = (DefaultTableModel) frame.getInvoiceItemsTable().getModel();
-                Object[] tableLines = br2.lines().toArray();
-                for (int i = 0; i < tableLines.length; i++) {
-                    String line = tableLines[i].toString().trim();
-                    String[] dataRow = line.split(",");
-                    model2.addRow(dataRow);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    br2.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-
-         */
     }
 
     public void createBtnActionPerformed(java.awt.event.ActionEvent evt) {
         // create new invoice row as you typed in invoice data
-        model = (DefaultTableModel) frame.getInvoicesTable().getModel();
-        model.addRow(new Object[]{
+        hraderModel = (DefaultTableModel) frame.getInvoicesTable().getModel();
+        hraderModel.addRow(new Object[]{
             frame.getNumTextField().getText(),
             frame.getDateTextField().getText(),
             frame.getNameTextField().getText(),
             frame.getTotalTextField().getText()
         });
-        NoNum = model.getRowCount();
+        NoNum = hraderModel.getRowCount();
         NoNum++; //to increase invoice number
         frame.getNumTextField().setText(String.valueOf(NoNum));
     }
@@ -211,6 +172,8 @@ public class Listeners {
         // save 2 csv files
 
         BufferedWriter bw = null;
+                BufferedWriter bw2 = null;
+
         try {
             File file = new File(path1);
             bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
@@ -225,21 +188,7 @@ public class Listeners {
                 }
                 bw.write("\n");
             }
-
-        } catch (IOException ex) {
-            Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                bw.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-
-        BufferedWriter bw2 = null;
-        try {
-            File file2 = new File(path2);
+             File file2 = new File(path2);
             bw2 = new BufferedWriter(new FileWriter(file2.getAbsoluteFile()));
             for (int i = 0; i < frame.getInvoiceItemsTable().getRowCount(); i++) {
                 for (int j = 0; j < frame.getInvoiceItemsTable().getColumnCount(); j++) {
@@ -257,19 +206,21 @@ public class Listeners {
             Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
+                bw.close();
                 bw2.close();
             } catch (IOException ex) {
                 Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
+        JOptionPane.showMessageDialog(null, "Two files saved sucessfully");
 
     }
 
     public void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        model = (DefaultTableModel) frame.getInvoicesTable().getModel();
+        hraderModel = (DefaultTableModel) frame.getInvoicesTable().getModel();
         if (frame.getInvoicesTable().getSelectedRowCount() == 1) { //if you already select a row
-            model.removeRow(frame.getInvoicesTable().getSelectedRow());            // remove selected row from the model
+            hraderModel.removeRow(frame.getInvoicesTable().getSelectedRow());            // remove selected row from the model
             JOptionPane.showMessageDialog(null, "Selected row deleted successfully");
         } else {
             if (frame.getInvoicesTable().getRowCount() == 0) {
@@ -283,12 +234,12 @@ public class Listeners {
 
     public void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {
         // undo changes , read the file again
-        model = (DefaultTableModel) frame.getInvoiceItemsTable().getModel();
+        lineModel = (DefaultTableModel) frame.getInvoiceItemsTable().getModel();
 
         if (frame.getInvoiceItemsTable().getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Empty Table, please load a txt file");
         } else {
-            model.setNumRows(0);
+            lineModel.setNumRows(0);
             BufferedReader br2 = null;
             try {
                 File file2 = new File(path2);
@@ -297,7 +248,7 @@ public class Listeners {
                 for (int i = 0; i < tableLines.length; i++) {
                     String line = tableLines[i].toString().trim();
                     String[] dataRow = line.split(",");
-                    model.addRow(dataRow);
+                    lineModel.addRow(dataRow);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
