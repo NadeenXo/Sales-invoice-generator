@@ -1,5 +1,8 @@
 
-package salesgenerator;
+package View;
+
+import Controller.Listeners;
+import View.MyFrame;
 
 /**
  *

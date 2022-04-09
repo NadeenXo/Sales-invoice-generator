@@ -257,14 +257,14 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="1" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="label3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="label4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="label5" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="invDateLable" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="customerNameLable" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="invTotalLable" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="label1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="invNumLabel" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -290,22 +290,22 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="label1" min="-2" max="-2" attributes="0"/>
+                      <Component id="invNumLabel" min="-2" max="-2" attributes="0"/>
                       <Component id="numTextField" min="-2" pref="16" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="label3" min="-2" max="-2" attributes="0"/>
+                      <Component id="invDateLable" min="-2" max="-2" attributes="0"/>
                       <Component id="dateTextField" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="label4" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerNameLable" min="-2" max="-2" attributes="0"/>
                       <Component id="nameTextField" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="label5" max="32767" attributes="0"/>
+                      <Component id="invTotalLable" max="32767" attributes="0"/>
                       <Component id="totalTextField" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -343,26 +343,26 @@
             <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cancelBtn.addActionListener(this);&#xd;&#xa;"/>
           </AuxValues>
         </Component>
-        <Component class="java.awt.Label" name="label1">
+        <Component class="java.awt.Label" name="invNumLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="invoice number"/>
           </Properties>
         </Component>
-        <Component class="java.awt.Label" name="label3">
+        <Component class="java.awt.Label" name="invDateLable">
           <Properties>
             <Property name="text" type="java.lang.String" value="invoice date"/>
           </Properties>
         </Component>
         <Component class="java.awt.TextField" name="dateTextField">
         </Component>
-        <Component class="java.awt.Label" name="label4">
+        <Component class="java.awt.Label" name="customerNameLable">
           <Properties>
             <Property name="text" type="java.lang.String" value="customer name"/>
           </Properties>
         </Component>
         <Component class="java.awt.TextField" name="nameTextField">
         </Component>
-        <Component class="java.awt.Label" name="label5">
+        <Component class="java.awt.Label" name="invTotalLable">
           <Properties>
             <Property name="text" type="java.lang.String" value="invoice total"/>
           </Properties>
@@ -475,7 +475,7 @@
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f0" green="f0" red="f0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="350.50"/>
+            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>

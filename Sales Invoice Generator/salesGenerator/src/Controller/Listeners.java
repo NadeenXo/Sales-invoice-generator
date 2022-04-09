@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package salesgenerator;
+package Controller;
+      
 
 //import Model.InvoiceLine;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import View.MyFrame;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
